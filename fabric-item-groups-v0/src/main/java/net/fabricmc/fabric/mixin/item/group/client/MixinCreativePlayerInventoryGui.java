@@ -16,8 +16,6 @@
 
 package net.fabricmc.fabric.mixin.item.group.client;
 
-import net.minecraft.screen.ScreenHandler;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -27,6 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.text.Text;
@@ -51,12 +50,12 @@ public abstract class MixinCreativePlayerInventoryGui extends AbstractInventoryS
 
 	private int fabric_getPageOffset(int page) {
 		switch (page) {
-		case 0:
-			return 0;
-		case 1:
-			return 12;
-		default:
-			return 12 + ((12 - FabricCreativeGuiComponents.COMMON_GROUPS.size()) * (page - 1));
+			case 0:
+				return 0;
+			case 1:
+				return 12;
+			default:
+				return 12 + ((12 - FabricCreativeGuiComponents.COMMON_GROUPS.size()) * (page - 1));
 		}
 	}
 
@@ -116,14 +115,14 @@ public abstract class MixinCreativePlayerInventoryGui extends AbstractInventoryS
 		}
 	}
 
-	@Inject(method = "init", at = @At("RETURN"), remap = false)
+	@Inject(method = "init", at = @At("RETURN"))
 	private void init(CallbackInfo info) {
 		fabric_updateSelection();
 
-		int xpos = x + 116;
-		int ypos = y - 10;
+		int xpos = x + 170;
+		int ypos = y + 4;
 
-		addButton(new FabricCreativeGuiComponents.ItemGroupButtonWidget(xpos + 11, ypos, FabricCreativeGuiComponents.Type.NEXT, this));
+		addButton(new FabricCreativeGuiComponents.ItemGroupButtonWidget(xpos + 10, ypos, FabricCreativeGuiComponents.Type.NEXT, this));
 		addButton(new FabricCreativeGuiComponents.ItemGroupButtonWidget(xpos, ypos, FabricCreativeGuiComponents.Type.PREVIOUS, this));
 	}
 

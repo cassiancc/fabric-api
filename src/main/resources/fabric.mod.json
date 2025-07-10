@@ -9,15 +9,15 @@
   "contact": {
     "homepage": "https://fabricmc.net",
     "irc": "irc://irc.esper.net:6667/fabric",
-    "issues": "https://github.com/FabricMC/fabric/issues",
-    "sources": "https://github.com/FabricMC/fabric"
+    "issues": "https://github.com/cassiancc/fabric/issues",
+    "sources": "https://github.com/cassiancc/fabric"
   },
   "authors": [
-    "FabricMC"
+    "FabricMC", "cassiancc"
   ],
   "depends": {
     "fabricloader": ">=0.15.11",
     "minecraft": "~1.16-alpha.20.13.inf"
   },
-  "description": "Core API module providing key hooks and intercompatibility features."
+  "description": "Core API module providing key hooks and intercompatibility features - Unofficially backported to 20w14infinite by cassiancc."
 }

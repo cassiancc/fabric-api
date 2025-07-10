@@ -39,7 +39,7 @@ def getBranch() {
 		return branch.substring(branch.lastIndexOf("/") + 1)
 	}
 
-	return "20w14infinite"
+	return "build.2-20w14infinite"
 }
 
 def moduleDependencies(project, List<String> depNames) {
