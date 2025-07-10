@@ -9,8 +9,5 @@
     "fabric-tool-attribute-api-v1": "*"
   },
   "entrypoints": {
-    "main": [
-      "net.fabricmc.fabric.test.tool.attribute.ToolAttributeTest"
-    ]
   }
 }

@@ -49,14 +49,13 @@ import net.fabricmc.fabric.impl.client.rendering.WorldRenderContextImpl;
 public abstract class MixinWorldRenderer {
 	@Shadow private BufferBuilderStorage bufferBuilders;
 	@Shadow private ClientWorld world;
-	@Shadow private ShaderEffect transparencyShader;
 	@Shadow private MinecraftClient client;
 	@Unique private final WorldRenderContextImpl context = new WorldRenderContextImpl();
 	@Unique private boolean didRenderParticles;
 
 	@Inject(method = "render", at = @At("HEAD"))
 	private void beforeRender(MatrixStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f matrix4f, CallbackInfo ci) {
-		context.prepare((WorldRenderer) (Object) this, matrices, tickDelta, limitTime, renderBlockOutline, camera, gameRenderer, lightmapTextureManager, matrix4f, bufferBuilders.getEntityVertexConsumers(), world.getProfiler(), transparencyShader != null, world);
+		context.prepare((WorldRenderer) (Object) this, matrices, tickDelta, limitTime, renderBlockOutline, camera, gameRenderer, lightmapTextureManager, matrix4f, bufferBuilders.getEntityVertexConsumers(), world.getProfiler(), false, world);
 		WorldRenderEvents.START.invoker().onStart(context);
 		didRenderParticles = false;
 	}

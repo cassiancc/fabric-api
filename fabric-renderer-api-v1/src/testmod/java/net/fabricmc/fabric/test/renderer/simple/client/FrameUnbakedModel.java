@@ -68,7 +68,7 @@ final class FrameUnbakedModel implements UnbakedModel {
 			MeshBuilder builder = renderer.meshBuilder();
 			QuadEmitter emitter = builder.getEmitter();
 			// TODO: Just some random texture to get a missing texture, we should get a proper texture soon
-			Sprite frameSprite = textureGetter.apply(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, new Identifier("foo:foo")));
+			Sprite frameSprite = textureGetter.apply(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, new Identifier("foo:foo")));
 
 			for (Direction direction : Direction.values()) {
 				// Draw outer frame

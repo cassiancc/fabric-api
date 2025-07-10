@@ -48,13 +48,13 @@ public class TestBedBlock extends Block {
 
 	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-		if (!state.get(OCCUPIED) && world.getDimension().isBedWorking()) {
+		if (!state.get(OCCUPIED) && world.getDimension().canPlayersSleep()) {
 			if (!world.isClient) {
 				player.trySleep(pos).ifLeft(sleepFailureReason -> {
 					Text message = sleepFailureReason.toText();
 
 					if (message != null) {
-						player.sendMessage(message, true);
+						player.sendMessage(message);
 					}
 				});
 			}

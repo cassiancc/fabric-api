@@ -55,7 +55,7 @@ public final class NetworkingLoginQueryTest implements ModInitializer {
 					});
 
 					// Execute the task on a worker thread as not to block the server thread
-					Util.getMainWorkerExecutor().execute(future);
+//					Util.getMainWorkerExecutor().execute(future);
 					synchronizer.waitFor(future);
 				}
 			} else {

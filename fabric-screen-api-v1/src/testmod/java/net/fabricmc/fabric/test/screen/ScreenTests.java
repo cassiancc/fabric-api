@@ -77,10 +77,10 @@ public final class ScreenTests implements ClientModInitializer {
 					.orElseThrow(() -> new AssertionError("Failed to find the \"Stop Sound\" button in the screen's elements"));
 
 			// Register render event to draw an icon on the screen
-			ScreenEvents.afterRender(screen).register((_screen, matrices, mouseX, mouseY, tickDelta) -> {
+			ScreenEvents.afterRender(screen).register((_screen, mouseX, mouseY, tickDelta) -> {
 				// Render an armor icon to test
 				client.getTextureManager().bindTexture(InGameHud.GUI_ICONS_TEXTURE);
-				DrawableHelper.drawTexture(matrices, (screen.width / 2) - 124, (screen.height / 4) + 96, 20, 20, 34, 9, 9, 9, 256, 256);
+				DrawableHelper.drawTexture((screen.width / 2) - 124, (screen.height / 4) + 96, 20, 20, 34, 9, 9, 9, 256, 256);
 			});
 
 			ScreenKeyboardEvents.allowKeyPress(screen).register((_screen, key, scancode, modifiers) -> {

@@ -53,7 +53,7 @@ public class BoxBlockEntity extends LootableContainerBlockEntity implements Exte
 	}
 
 	@Override
-	protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
+	protected ScreenHandler createContainer(int syncId, PlayerInventory playerInventory) {
 		return new BoxScreenHandler(syncId, playerInventory, this);
 	}
 

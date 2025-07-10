@@ -60,7 +60,7 @@ public class BoxBlock extends BlockWithEntity {
 		return BlockRenderType.MODEL;
 	}
 
-	@Override
+//	@Override
 	public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
 		if (state.getBlock() != newState.getBlock()) {
 			BlockEntity be = world.getBlockEntity(pos);
@@ -70,7 +70,7 @@ public class BoxBlock extends BlockWithEntity {
 				world.updateComparators(pos, this);
 			}
 
-			super.onStateReplaced(state, world, pos, newState, moved);
+//			super.onStateReplaced(state, world, pos, newState, moved);
 		}
 	}
 

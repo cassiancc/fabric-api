@@ -182,13 +182,13 @@ public final class ScreenEvents {
 	@Environment(EnvType.CLIENT)
 	@FunctionalInterface
 	public interface BeforeRender {
-		void beforeRender(Screen screen, MatrixStack matrices, int mouseX, int mouseY, float tickDelta);
+		void beforeRender(Screen screen, int mouseX, int mouseY, float tickDelta);
 	}
 
 	@Environment(EnvType.CLIENT)
 	@FunctionalInterface
 	public interface AfterRender {
-		void afterRender(Screen screen, MatrixStack matrices, int mouseX, int mouseY, float tickDelta);
+		void afterRender(Screen screen, int mouseX, int mouseY, float tickDelta);
 	}
 
 	@Environment(EnvType.CLIENT)

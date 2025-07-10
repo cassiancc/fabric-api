@@ -16,6 +16,8 @@
 
 package net.fabricmc.fabric.test.renderer.simple;
 
+import net.minecraft.block.AbstractBlock;
+
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
@@ -33,13 +35,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-
 public final class FrameBlock extends Block implements BlockEntityProvider {
 	public final Identifier id;
 
 	public FrameBlock(Identifier id) {
-		super(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque());
+		super(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK).nonOpaque());
 		this.id = id;
 	}
 
@@ -70,7 +70,7 @@ public final class FrameBlock extends Block implements BlockEntityProvider {
 			}
 
 			// getBlockFromItem will return air if we do not have a block item in hand
-			if (handBlock.is(Blocks.AIR)) {
+			if (handBlock.equals(Blocks.AIR)) {
 				return ActionResult.FAIL;
 			}
 

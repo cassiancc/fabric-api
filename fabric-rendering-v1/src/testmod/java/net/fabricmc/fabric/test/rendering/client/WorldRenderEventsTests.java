@@ -28,7 +28,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 
 public class WorldRenderEventsTests implements ClientModInitializer {
 	private static boolean onBlockOutline(WorldRenderContext wrc, WorldRenderContext.BlockOutlineContext blockOutlineContext) {
-		if (blockOutlineContext.blockState().isOf(Blocks.DIAMOND_BLOCK)) {
+		if (blockOutlineContext.blockState().getBlock().equals(Blocks.DIAMOND_BLOCK)) {
 			wrc.matrixStack().push();
 			Vec3d cameraPos = MinecraftClient.getInstance().gameRenderer.getCamera().getPos();
 			BlockPos pos = blockOutlineContext.blockPos();

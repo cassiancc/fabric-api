@@ -29,19 +29,19 @@ class StopSoundButton extends AbstractPressableButtonWidget {
 	private final Screen screen;
 
 	StopSoundButton(Screen screen, int x, int y, int width, int height) {
-		super(x, y, width, height, Text.of(""));
+		super(x, y, width, height, "");
 		this.screen = screen;
 	}
 
 	@Override
-	public void render(MatrixStack matrices, int mouseX, int mouseY, float tickDelta) {
+	public void render(int mouseX, int mouseY, float tickDelta) {
 		MinecraftClient client = MinecraftClient.getInstance();
 		// Render the armor icon to test
 		client.getTextureManager().bindTexture(InGameHud.GUI_ICONS_TEXTURE);
-		DrawableHelper.drawTexture(matrices, this.x, this.y, this.width, this.height, 43, 27, 9, 9, 256, 256);
+		DrawableHelper.drawTexture(this.x, this.y, this.width, this.height, 43, 27, 9, 9, 256, 256);
 
 		if (this.isMouseOver(mouseX, mouseY)) {
-			this.screen.renderTooltip(matrices, new LiteralText("Click to stop all sounds"), this.x, this.y);
+			this.screen.renderTooltip("Click to stop all sounds", this.x, this.y);
 		}
 	}
 

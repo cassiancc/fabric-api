@@ -48,25 +48,25 @@ public class PositionedScreen extends HandledScreen<ScreenHandler> {
 	}
 
 	@Override
-	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-		renderBackground(matrices);
-		super.render(matrices, mouseX, mouseY, delta);
-		drawMouseoverTooltip(matrices, mouseX, mouseY);
+	public void render(int mouseX, int mouseY, float delta) {
+		renderBackground();
+		super.render(mouseX, mouseY, delta);
+		drawMouseoverTooltip(mouseX, mouseY);
 	}
 
 	@Override
 	protected void init() {
 		super.init();
 		// Center the title
-		titleX = (backgroundWidth - textRenderer.getWidth(title)) / 2;
+//		title = (backgroundWidth - textRenderer.getStringWidth(title.asString())) / 2;
 	}
 
 	@Override
-	protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+	protected void drawBackground(float delta, int mouseX, int mouseY) {
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		client.getTextureManager().bindTexture(TEXTURE);
 		int x = (width - backgroundWidth) / 2;
 		int y = (height - backgroundHeight) / 2;
-		drawTexture(matrices, x, y, 0, 0, backgroundWidth, backgroundHeight);
+		drawTexture(x, y, 0, 0, backgroundWidth, backgroundHeight);
 	}
 }

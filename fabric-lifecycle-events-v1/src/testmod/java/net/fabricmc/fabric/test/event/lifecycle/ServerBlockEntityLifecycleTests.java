@@ -66,7 +66,7 @@ public class ServerBlockEntityLifecycleTests implements ModInitializer {
 					int worldEntities = world.blockEntities.size();
 
 					if (PRINT_SERVER_BLOCKENTITY_MESSAGES) {
-						logger.info("[SERVER] Tracked BlockEntities in " + world.getRegistryKey().toString() + " - " + worldEntities);
+						logger.info("[SERVER] Tracked BlockEntities in " + world.getDimension().getType().toString() + " - " + worldEntities);
 					}
 
 					entities += worldEntities;

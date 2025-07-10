@@ -58,11 +58,11 @@ public final class EntityEventTests implements ModInitializer {
 		});
 
 		ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register((player, origin, destination) -> {
-			LOGGER.info("Moved player {}: [{} -> {}]", player, origin.getRegistryKey().getValue(), destination.getRegistryKey().getValue());
+			LOGGER.info("Moved player {}: [{} -> {}]", player, origin.getDimension().getType().toString(), destination.getDimension().getType().toString());
 		});
 
 		ServerEntityWorldChangeEvents.AFTER_ENTITY_CHANGE_WORLD.register((originalEntity, newEntity, origin, destination) -> {
-			LOGGER.info("Moved entity {} -> {}: [({} -> {}]", originalEntity, newEntity, origin.getRegistryKey().getValue(), destination.getRegistryKey().getValue());
+			LOGGER.info("Moved entity {} -> {}: [({} -> {}]", originalEntity, newEntity, origin.getDimension().getType().toString(), destination.getDimension().getType().toString());
 		});
 
 		ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) -> {
@@ -70,7 +70,7 @@ public final class EntityEventTests implements ModInitializer {
 		});
 
 		ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) -> {
-			LOGGER.info("Respawned {}, [{}, {}]", oldPlayer.getGameProfile().getName(), oldPlayer.getServerWorld().getRegistryKey().getValue(), newPlayer.getServerWorld().getRegistryKey().getValue());
+			LOGGER.info("Respawned {}, [{}, {}]", oldPlayer.getGameProfile().getName(), oldPlayer.getServerWorld().getDimension().getType().toString(), newPlayer.getServerWorld().getDimension().getType().toString());
 		});
 
 		ServerPlayerEvents.ALLOW_DEATH.register((player, source, amount) -> {
@@ -102,11 +102,11 @@ public final class EntityEventTests implements ModInitializer {
 		});
 
 		EntitySleepEvents.ALLOW_BED.register((entity, sleepingPos, state, vanillaResult) -> {
-			return state.isOf(TEST_BED) ? ActionResult.SUCCESS : ActionResult.PASS;
+			return state.getBlock().equals(TEST_BED) ? ActionResult.SUCCESS : ActionResult.PASS;
 		});
 
 		EntitySleepEvents.MODIFY_SLEEPING_DIRECTION.register((entity, sleepingPos, sleepingDirection) -> {
-			return entity.world.getBlockState(sleepingPos).isOf(TEST_BED) ? Direction.NORTH : sleepingDirection;
+			return entity.world.getBlockState(sleepingPos).getBlock().equals(TEST_BED) ? Direction.NORTH : sleepingDirection;
 		});
 
 		EntitySleepEvents.ALLOW_SLEEP_TIME.register((player, sleepingPos, vanillaResult) -> {

@@ -40,29 +40,26 @@ final class ChannelScreen extends Screen {
 
 	@Override
 	protected void init() {
-		this.s2cButton = this.addButton(new ButtonWidget(this.width / 2 - 55, 5, 50, 20, new LiteralText("S2C"), this::toS2C, (button, matrices, mouseX, mouseY) -> {
-			this.renderTooltip(matrices, new LiteralText("Packets this client can receive"), mouseX, mouseY);
-		}));
-		this.c2sButton = this.addButton(new ButtonWidget(this.width / 2 + 5, 5, 50, 20, new LiteralText("C2S"), this::toC2S, (button, matrices, mouseX, mouseY) -> {
-			this.renderTooltip(matrices, new LiteralText("Packets the server can receive"), mouseX, mouseY);
-		}));
-		this.closeButton = this.addButton(new ButtonWidget(this.width / 2 - 60, this.height - 25, 120, 20, new LiteralText("Close"), button -> this.onClose()));
+		this.s2cButton = this.addButton(new ButtonWidget(this.width / 2 - 55, 5, 50, 20,"S2C", this::toS2C));
+		this.renderTooltip("Packets this client can receive", this.width / 2 - 55, 10);
+		this.c2sButton = this.addButton(new ButtonWidget(this.width / 2 + 5, 5, 50, 20, "C2S", this::toC2S));
+		this.renderTooltip("Packets this server can receive", this.width / 2 + 5, 10);
+		this.closeButton = this.addButton(new ButtonWidget(this.width / 2 - 60, this.height - 25, 120, 20, "Close", button -> this.onClose()));
 		this.channelList = this.addChild(new ChannelList(this.client, this.width, this.height - 60, 30, this.height - 30, this.textRenderer.fontHeight + 2));
 	}
 
 	@Override
-	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-		this.renderBackgroundTexture(0);
-		this.channelList.render(matrices, mouseX, mouseY, delta);
-		super.render(matrices, mouseX, mouseY, delta);
+	public void render(int mouseX, int mouseY, float delta) {
+		this.renderBackground(0);
+		this.channelList.render(mouseX, mouseY, delta);
+		super.render(mouseX, mouseY, delta);
 
 		if (this.s2cButton.active && this.c2sButton.active) {
-			final Text clickMe = new LiteralText("Click S2C or C2S to view supported channels");
+			final String clickMe = "Click S2C or C2S to view supported channels";
 
-			final int textWidth = this.textRenderer.getWidth(clickMe);
+			final int textWidth = this.textRenderer.getStringWidth(clickMe);
 			//noinspection ConstantConditions
 			this.textRenderer.draw(
-					matrices,
 					clickMe,
 					this.width / 2.0F - (textWidth / 2.0F),
 					60,

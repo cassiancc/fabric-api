@@ -18,6 +18,9 @@ package net.fabricmc.fabric.mixin.entity.event;
 
 import java.util.Optional;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -48,6 +51,9 @@ abstract class LivingEntityMixin {
 	@Shadow
 	public abstract Optional<BlockPos> getSleepingPosition();
 
+	@Shadow
+	public abstract boolean damage(DamageSource source, float amount);
+
 	@Inject(method = "onDeath", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;onKilledOther(Lnet/minecraft/entity/LivingEntity;)V", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
 	private void onEntityKilledOther(DamageSource source, CallbackInfo ci, Entity attacker) {
 		// FIXME: Cannot use shadowed fields from supermixins - needs a fix so people can use fabric api in a dev environment even though this is fine in this repo and prod.
@@ -55,15 +61,17 @@ abstract class LivingEntityMixin {
 		ServerEntityCombatEvents.AFTER_KILLED_OTHER_ENTITY.invoker().afterKilledOtherEntity((ServerWorld) ((LivingEntity) (Object) this).world, attacker, (LivingEntity) (Object) this);
 	}
 
-	// TODO wrapoperation
-//	@Redirect(method = "damage", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;onDeath(Lnet/minecraft/entity/damage/DamageSource;)V"))
-//	void beforePlayerKilled(LivingEntity instance, DamageSource source) {
-//		if (livingEntity instanceof ServerPlayerEntity) {
-//			return dead && ServerPlayerEvents.ALLOW_DEATH.invoker().allowDeath((ServerPlayerEntity) livingEntity, source, amount);
-//		}
-//
-//		return dead;
-//	}
+	@WrapOperation(method = "damage", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;onDeath(Lnet/minecraft/entity/damage/DamageSource;)V"))
+	void beforePlayerKilled(LivingEntity livingEntity, DamageSource source, Operation<Void> original) {
+		if (livingEntity instanceof ServerPlayerEntity) {
+			// TODO infinite - get the damage amount local
+			if (dead && ServerPlayerEvents.ALLOW_DEATH.invoker().allowDeath((ServerPlayerEntity) livingEntity, source, 0)){
+				original.call(livingEntity, source);
+			}
+		}
+
+		original.call(livingEntity, source);
+	}
 
 	@Inject(method = "sleep", at = @At("RETURN"))
 	private void onSleep(BlockPos pos, CallbackInfo info) {

@@ -9,7 +9,7 @@ plugins {
 	id "eclipse"
 	id "idea"
 	id "maven-publish"
-	id "fabric-loom" version "0.10.55" apply false
+	id "fabric-loom" version "1.7-SNAPSHOT" apply false
 	id "org.cadixdev.licenser" version "0.6.1"
 	id "com.matthewprenger.cursegradle" version "1.4.0"
 	id "com.modrinth.minotaur" version "1.1.0"
@@ -17,7 +17,7 @@ plugins {
 
 def ENV = System.getenv()
 
-version = project.version + "+" + (ENV.GITHUB_RUN_NUMBER ? "" : "local-") + getBranch()
+version = project.version + "+" + getBranch()
 logger.lifecycle("Building Fabric: " + version)
 
 import org.apache.commons.codec.digest.DigestUtils
@@ -39,7 +39,7 @@ def getBranch() {
 		return branch.substring(branch.lastIndexOf("/") + 1)
 	}
 
-	return "unknown"
+	return "20w14infinite"
 }
 
 def moduleDependencies(project, List<String> depNames) {
@@ -51,9 +51,13 @@ def moduleDependencies(project, List<String> depNames) {
 	}
 }
 
+base {
+	archivesName = project.name
+}
+
 allprojects {
 	apply plugin: "java-library"
-	apply plugin: "checkstyle"
+//	apply plugin: "checkstyle"
 	apply plugin: "maven-publish"
 	apply plugin: "fabric-loom"
 	apply plugin: "org.cadixdev.licenser"
@@ -94,10 +98,6 @@ allprojects {
 		modApi "net.fabricmc:fabric-loader:${project.loader_version}"
 	}
 
-	loom {
-		shareRemapCaches = true
-	}
-
 	repositories {
 		mavenLocal()
 	}
@@ -120,10 +120,10 @@ allprojects {
 		from sourceSets.main.allSource
 	}
 
-	checkstyle {
-		configFile = rootProject.file("checkstyle.xml")
-		toolVersion = "9.1"
-	}
+//	checkstyle {
+//		configFile = rootProject.file("checkstyle.xml")
+//		toolVersion = "9.1"
+//	}
 
 	tasks.withType(AbstractArchiveTask) {
 		preserveFileTimestamps = false
@@ -204,21 +204,11 @@ subprojects {
 	}
 
 	javadoc.enabled = false
-
-	afterEvaluate {
-		// Disable the gen sources task on sub projects
-		genSourcesWithFernFlower.enabled = false
-		genSourcesWithCfr.enabled = false
-
-		// Work around a loom bug causing empty jars to be pushed to maven local.
-		publishMavenJavaPublicationToMavenLocal.dependsOn rootProject.tasks.getByName("remapAllJars")
-		publishMavenJavaPublicationToMavenLocal.dependsOn rootProject.tasks.getByName("remapAllSources")
-	}
 }
 
 task remapMavenJar(type: net.fabricmc.loom.task.RemapJarTask, dependsOn: jar) {
 	input = jar.archiveFile
-	archiveFileName = "${archivesBaseName}-${project.version}-maven.jar"
+	archiveFileName = "${project.base.archivesName.get()}-${project.version}-maven.jar"
 	addNestedDependencies = false
 }
 build.dependsOn remapMavenJar
@@ -335,7 +325,7 @@ task github(dependsOn: remapMavenJar) {
 		releaseBuilder.prerelease(project.prerelease)
 
 		def ghRelease = releaseBuilder.create()
-		ghRelease.uploadAsset(file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"), "application/java-archive");
+		ghRelease.uploadAsset(file("${project.buildDir}/libs/${base.archivesName.get()}-${version}.jar"), "application/java-archive");
 	}
 }
 

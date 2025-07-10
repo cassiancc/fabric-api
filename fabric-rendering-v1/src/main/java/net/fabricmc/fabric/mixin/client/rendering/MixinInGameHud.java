@@ -29,8 +29,8 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 
 @Mixin(InGameHud.class)
 public class MixinInGameHud {
-	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;color4f(FFFF)V"), slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/PlayerListHud;render(Lnet/minecraft/client/util/math/MatrixStack;ILnet/minecraft/scoreboard/Scoreboard;Lnet/minecraft/scoreboard/ScoreboardObjective;)V")))
-	public void render(MatrixStack matrixStack, float tickDelta, CallbackInfo callbackInfo) {
-		HudRenderCallback.EVENT.invoker().onHudRender(matrixStack, tickDelta);
+	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;color4f(FFFF)V", ordinal = 0))
+	public void render(float tickDelta, CallbackInfo ci) {
+		HudRenderCallback.EVENT.invoker().onHudRender(tickDelta);
 	}
 }

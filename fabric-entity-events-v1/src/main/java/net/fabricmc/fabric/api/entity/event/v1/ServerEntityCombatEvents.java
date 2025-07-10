@@ -30,7 +30,7 @@ public final class ServerEntityCombatEvents {
 	/**
 	 * An event that is called after an entity is directly responsible for killing another entity.
 	 *
-	 * @see Entity#onKilledOther(ServerWorld, LivingEntity)
+	 * @see Entity#onKilledOther(LivingEntity) 
 	 */
 	public static final Event<AfterKilledOtherEntity> AFTER_KILLED_OTHER_ENTITY = EventFactory.createArrayBacked(AfterKilledOtherEntity.class, callbacks -> (world, entity, killedEntity) -> {
 		for (AfterKilledOtherEntity callback : callbacks) {

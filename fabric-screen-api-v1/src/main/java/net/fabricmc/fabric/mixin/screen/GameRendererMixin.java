@@ -16,6 +16,7 @@
 
 package net.fabricmc.fabric.mixin.screen;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -44,18 +45,18 @@ abstract class GameRendererMixin {
 	@Unique
 	private Screen renderingScreen;
 
-	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;render(IIF)V"))
-	private void onBeforeRenderScreen(float tickDelta, long startTime, boolean tick, CallbackInfo ci) {
+	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;render(IIF)V"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
+	private void onBeforeRenderScreen(float tickDelta, long startTime, boolean tick, CallbackInfo ci, int mouseX, int mouseY) {
 		// Store the screen in a variable in case someone tries to change the screen during this before render event.
 		// If someone changes the screen, the after render event will likely have class cast exceptions or an NPE.
 		this.renderingScreen = this.client.currentScreen;
-		ScreenEvents.beforeRender(this.renderingScreen).invoker().beforeRender(this.renderingScreen, matrices, mouseX, mouseY, tickDelta);
+		ScreenEvents.beforeRender(this.renderingScreen).invoker().beforeRender(this.renderingScreen, mouseX, mouseY, tickDelta);
 	}
 
 	// This injection should end up in the try block so exceptions are caught
-	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;render(IIF)V", shift = At.Shift.AFTER))
-	private void onAfterRenderScreen(float tickDelta, long startTime, boolean tick, CallbackInfo ci, int mouseX, int mouseY, MatrixStack matrices) {
-		ScreenEvents.afterRender(this.renderingScreen).invoker().afterRender(this.renderingScreen, matrices, mouseX, mouseY, tickDelta);
+	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;render(IIF)V", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
+	private void onAfterRenderScreen(float tickDelta, long startTime, boolean tick, CallbackInfo ci, int mouseX, int mouseY) {
+		ScreenEvents.afterRender(this.renderingScreen).invoker().afterRender(this.renderingScreen, mouseX, mouseY, tickDelta);
 		// Finally set the currently rendering screen to null
 		this.renderingScreen = null;
 	}
