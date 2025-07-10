@@ -19,6 +19,9 @@ package net.fabricmc.fabric.mixin.entity.event;
 import java.util.List;
 
 import com.mojang.datafixers.util.Either;
+
+import net.minecraft.world.dimension.DimensionType;
+
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -42,7 +45,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Unit;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
@@ -66,7 +68,7 @@ abstract class ServerPlayerEntityMixin extends LivingEntityMixin {
 
 		// If the damage source that killed the player was an entity, then fire the event.
 		if (attacker != null) {
-			attacker.onKilledOther(this.getServerWorld(), (ServerPlayerEntity) (Object) this);
+			attacker.onKilledOther((ServerPlayerEntity) (Object) this);
 			ServerEntityCombatEvents.AFTER_KILLED_OTHER_ENTITY.invoker().afterKilledOtherEntity(this.getServerWorld(), attacker, (ServerPlayerEntity) (Object) this);
 		}
 	}
@@ -75,7 +77,7 @@ abstract class ServerPlayerEntityMixin extends LivingEntityMixin {
 	 * This is called by both "moveToWorld" and "teleport".
 	 * So this is suitable to handle the after event from both call sites.
 	 */
-	@Inject(method = "worldChanged(Lnet/minecraft/server/world/ServerWorld;)V", at = @At("TAIL"))
+	@Inject(method = "dimensionChanged", at = @At("TAIL"))
 	private void afterWorldChanged(ServerWorld origin, CallbackInfo ci) {
 		ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.invoker().afterChangeWorld((ServerPlayerEntity) (Object) this, origin, this.getServerWorld());
 	}
@@ -99,10 +101,10 @@ abstract class ServerPlayerEntityMixin extends LivingEntityMixin {
 		}
 	}
 
-	@Redirect(method = "trySleep", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayerEntity;setSpawnPoint(Lnet/minecraft/util/registry/RegistryKey;Lnet/minecraft/util/math/BlockPos;FZZ)V"))
-	private void onSetSpawnPoint(ServerPlayerEntity player, RegistryKey<World> dimension, BlockPos pos, float angle, boolean spawnPointSet, boolean sendMessage) {
+	@Redirect(method = "trySleep", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayerEntity;setSpawnPoint(Lnet/minecraft/world/dimension/DimensionType;Lnet/minecraft/util/math/BlockPos;ZZ)V"))
+	private void onSetSpawnPoint(ServerPlayerEntity player, DimensionType dimension, BlockPos pos, boolean bl, boolean bl2) {
 		if (EntitySleepEvents.ALLOW_SETTING_SPAWN.invoker().allowSettingSpawn(player, pos)) {
-			player.setSpawnPoint(dimension, pos, angle, spawnPointSet, sendMessage);
+			player.setSpawnPoint(dimension, pos, bl, bl2);
 		}
 	}
 

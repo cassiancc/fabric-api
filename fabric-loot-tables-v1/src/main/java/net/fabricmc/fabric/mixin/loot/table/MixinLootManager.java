@@ -38,13 +38,13 @@ import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback;
 
 @Mixin(LootManager.class)
 public class MixinLootManager {
-	@Shadow private Map<Identifier, LootTable> tables;
+	@Shadow private Map<Identifier, LootTable> suppliers;
 
 	@Inject(method = "apply", at = @At("RETURN"))
 	private void apply(Map<Identifier, JsonObject> objectMap, ResourceManager manager, Profiler profiler, CallbackInfo info) {
 		Map<Identifier, LootTable> newSuppliers = new HashMap<>();
 
-		tables.forEach((id, supplier) -> {
+		suppliers.forEach((id, supplier) -> {
 			FabricLootSupplierBuilder builder = FabricLootSupplierBuilder.of(supplier);
 
 			//noinspection ConstantConditions
@@ -52,9 +52,9 @@ public class MixinLootManager {
 					manager, (LootManager) (Object) this, id, builder, (s) -> newSuppliers.put(id, s)
 			);
 
-			newSuppliers.computeIfAbsent(id, (i) -> builder.build());
+			newSuppliers.computeIfAbsent(id, (i) -> builder.create());
 		});
 
-		tables = ImmutableMap.copyOf(newSuppliers);
+		suppliers = ImmutableMap.copyOf(newSuppliers);
 	}
 }

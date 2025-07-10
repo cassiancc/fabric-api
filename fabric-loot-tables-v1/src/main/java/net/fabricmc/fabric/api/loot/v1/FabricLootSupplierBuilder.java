@@ -35,20 +35,20 @@ public class FabricLootSupplierBuilder extends LootTable.Builder {
 	}
 
 	@Override
-	public FabricLootSupplierBuilder pool(LootPool.Builder pool) {
-		super.pool(pool);
+	public FabricLootSupplierBuilder withPool(LootPool.Builder pool) {
+		super.withPool(pool);
 		return this;
 	}
 
 	@Override
-	public FabricLootSupplierBuilder type(LootContextType type) {
-		super.type(type);
+	public FabricLootSupplierBuilder withType(LootContextType type) {
+		super.withType(type);
 		return this;
 	}
 
 	@Override
-	public FabricLootSupplierBuilder apply(LootFunction.Builder function) {
-		super.apply(function);
+	public FabricLootSupplierBuilder withFunction(LootFunction.Builder function) {
+		super.withFunction(function);
 		return this;
 	}
 
@@ -81,7 +81,7 @@ public class FabricLootSupplierBuilder extends LootTable.Builder {
 	}
 
 	/**
-	 * Copies the pools and functions of the {@code supplier} to this builder.
+	 * Copies the pools and functions of the {@code supplier} to this builder.
 	 * If {@code copyType} is true, the {@link FabricLootSupplier#getType type} of the supplier is also copied.
 	 */
 	public FabricLootSupplierBuilder copyFrom(LootTable supplier, boolean copyType) {
@@ -90,7 +90,7 @@ public class FabricLootSupplierBuilder extends LootTable.Builder {
 		extended.getFunctions().addAll(extendedSupplier.getFunctions());
 
 		if (copyType) {
-			type(extendedSupplier.getType());
+			withType(extendedSupplier.getType());
 		}
 
 		return this;

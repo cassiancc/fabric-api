@@ -20,7 +20,6 @@ import java.util.Objects;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.TickableElement;
 import net.minecraft.client.util.math.MatrixStack;
 
 import net.fabricmc.api.EnvType;
@@ -93,8 +92,8 @@ public final class ScreenEvents {
 	 * });
 	 * }</pre>
 	 *
-	 * <p>Note that by adding an element to a screen, the element is not automatically {@link net.minecraft.client.gui.screen.TickableElement ticked} or {@link net.minecraft.client.gui.Drawable drawn}.
-	 * Unless the element is button, you need to call the specific {@link TickableElement#tick() tick} and {@link net.minecraft.client.gui.Drawable#render(MatrixStack, int, int, float) render} methods in the corresponding screen events.
+//	 * <p>Note that by adding an element to a screen, the element is not automatically ticked or {@link net.minecraft.client.gui.Drawable drawn}.
+	 * Unless the element is button, you need to call the specific {@link net.minecraft.util.Tickable#tick() tick} and {@link net.minecraft.client.gui.Drawable#render(int, int, float)}  render} methods in the corresponding screen events.
 	 *
 	 * <p>This event can also indicate that the previous screen has been closed.
 	 * @see ScreenEvents#BEFORE_INIT
@@ -109,7 +108,7 @@ public final class ScreenEvents {
 	 * An event that is called after {@link Screen#removed()} is called.
 	 * This event signifies that the screen is now closed.
 	 *
-	 * <p>This event is typically used to undo any screen specific state changes such as setting the keyboard to receive {@link net.minecraft.client.Keyboard#setRepeatEvents(boolean) repeat events} or terminate threads spawned by a screen.
+	 * <p>This event is typically used to undo any screen specific state changes such as setting the keyboard to receive {@link net.minecraft.client.Keyboard#enableRepeatEvents(boolean)}  repeat events} or terminate threads spawned by a screen.
 	 * This event may precede initialization events {@link ScreenEvents#BEFORE_INIT} but there is no guarantee that event will be called immediately afterwards.
 	 */
 	public static Event<Remove> remove(Screen screen) {

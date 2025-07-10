@@ -11,7 +11,6 @@ plugins {
 	id "maven-publish"
 	id "fabric-loom" version "0.10.55" apply false
 	id "org.cadixdev.licenser" version "0.6.1"
-	id "org.ajoberstar.grgit" version "3.1.1"
 	id "com.matthewprenger.cursegradle" version "1.4.0"
 	id "com.modrinth.minotaur" version "1.1.0"
 }
@@ -30,18 +29,7 @@ def getSubprojectVersion(project) {
 	if (!version) {
 		throw new NullPointerException("Could not find version for " + project.name)
 	}
-
-	if (grgit == null) {
-		return version + "+nogit"
-	}
-
-	def latestCommits = grgit.log(paths: [project.name], maxCommits: 1)
-
-	if (latestCommits.isEmpty()) {
-		return version + "+uncommited"
-	}
-
-	return version + "+" + latestCommits.get(0).id.substring(0, 8) + DigestUtils.sha256Hex(project.rootProject.minecraft_version).substring(0, 2)
+	return version + "+nogit"
 }
 
 def getBranch() {
@@ -51,12 +39,7 @@ def getBranch() {
 		return branch.substring(branch.lastIndexOf("/") + 1)
 	}
 
-	if (grgit == null) {
-		return "unknown"
-	}
-
-	def branch = grgit.branch.current().name
-	return branch.substring(branch.lastIndexOf("/") + 1)
+	return "unknown"
 }
 
 def moduleDependencies(project, List<String> depNames) {

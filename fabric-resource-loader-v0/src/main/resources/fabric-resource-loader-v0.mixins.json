@@ -3,24 +3,15 @@
   "package": "net.fabricmc.fabric.mixin.resource.loader",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "AbstractFileResourcePackAccessor",
-    "FileResourcePackProviderAccessor",
-    "DefaultResourcePackMixin",
-    "KeyedResourceReloadListenerMixin",
-    "MinecraftServerMixin",
-    "NamespaceResourceManagerAccessor",
-    "NamespaceResourceManagerMixin",
-    "ReloadableResourceManagerImplMixin",
-    "ResourcePackManagerMixin",
-    "ResourcePackManagerAccessor",
-    "ResourcePackProfileAccessor"
+    "MixinKeyedResourceReloadListener$Server",
+    "MixinMinecraftServer",
+    "MixinReloadableResourceManagerImpl",
+    "MixinDefaultResourcePack"
   ],
   "client": [
-    "client.ClientBuiltinResourcePackProviderMixin",
-    "client.CreateWorldScreenMixin",
-    "client.FontManagerResourceReloadListenerMixin",
-    "client.GameOptionsMixin",
-    "client.KeyedResourceReloadListenerClientMixin"
+    "MixinFormat4ResourcePack",
+    "MixinKeyedResourceReloadListener$Client",
+    "MixinMinecraftGame"
   ],
   "injectors": {
     "defaultRequire": 1

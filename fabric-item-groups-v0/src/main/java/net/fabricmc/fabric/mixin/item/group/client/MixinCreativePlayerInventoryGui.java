@@ -16,6 +16,8 @@
 
 package net.fabricmc.fabric.mixin.item.group.client;
 
+import net.minecraft.screen.ScreenHandler;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -25,8 +27,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.screen.ScreenHandler;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.text.Text;
@@ -116,7 +116,7 @@ public abstract class MixinCreativePlayerInventoryGui extends AbstractInventoryS
 		}
 	}
 
-	@Inject(method = "init", at = @At("RETURN"))
+	@Inject(method = "init", at = @At("RETURN"), remap = false)
 	private void init(CallbackInfo info) {
 		fabric_updateSelection();
 
@@ -135,7 +135,7 @@ public abstract class MixinCreativePlayerInventoryGui extends AbstractInventoryS
 	}
 
 	@Inject(method = "renderTabTooltipIfHovered", at = @At("HEAD"), cancellable = true)
-	private void renderTabTooltipIfHovered(MatrixStack matrixStack, ItemGroup itemGroup, int mx, int my, CallbackInfoReturnable<Boolean> info) {
+	private void method_2471(ItemGroup itemGroup, int mx, int my, CallbackInfoReturnable<Boolean> info) {
 		if (!fabric_isGroupVisible(itemGroup)) {
 			info.setReturnValue(false);
 		}
@@ -149,7 +149,7 @@ public abstract class MixinCreativePlayerInventoryGui extends AbstractInventoryS
 	}
 
 	@Inject(method = "renderTabIcon", at = @At("HEAD"), cancellable = true)
-	private void renderTabIcon(MatrixStack matrixStack, ItemGroup itemGroup, CallbackInfo info) {
+	private void method_2468(ItemGroup itemGroup, CallbackInfo info) {
 		if (!fabric_isGroupVisible(itemGroup)) {
 			info.cancel();
 		}

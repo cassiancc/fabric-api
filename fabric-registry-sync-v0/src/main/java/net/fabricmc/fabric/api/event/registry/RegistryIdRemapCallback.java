@@ -49,6 +49,11 @@ public interface RegistryIdRemapCallback<T> {
 	}
 
 	static <T> Event<RegistryIdRemapCallback<T>> event(Registry<T> registry) {
-		return ListenableRegistry.get(registry).fabric_getRemapEvent();
+		if (!(registry instanceof ListenableRegistry)) {
+			throw new IllegalArgumentException("Unsupported registry: " + registry.getClass().getName());
+		}
+
+		//noinspection unchecked
+		return ((ListenableRegistry) registry).fabric_getRemapEvent();
 	}
 }

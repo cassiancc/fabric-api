@@ -19,8 +19,8 @@ package net.fabricmc.fabric.impl.registry.sync.trackers;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.minecraft.util.collection.IdList;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.collection.IdList;
 import net.minecraft.util.registry.Registry;
 
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;

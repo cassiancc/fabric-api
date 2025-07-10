@@ -33,14 +33,14 @@ import net.fabricmc.fabric.api.resource.ResourceReloadListenerKeys;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 
 public class FlammableBlockRegistryImpl implements FlammableBlockRegistry, SimpleSynchronousResourceReloadListener {
-	private static final FlammableBlockRegistry.Entry REMOVED = new FlammableBlockRegistry.Entry(0, 0);
+	private static final Entry REMOVED = new Entry(0, 0);
 	private static final Map<Block, FlammableBlockRegistryImpl> REGISTRIES = new HashMap<>();
 	private static final Collection<Identifier> RELOAD_DEPS = Collections.singletonList(ResourceReloadListenerKeys.TAGS);
 	private static int idCounter = 0;
 
-	private final Map<Block, FlammableBlockRegistry.Entry> registeredEntriesBlock = new HashMap<>();
-	private final Map<Tag<Block>, FlammableBlockRegistry.Entry> registeredEntriesTag = new HashMap<>();
-	private final Map<Block, FlammableBlockRegistry.Entry> computedEntries = new HashMap<>();
+	private final Map<Block, Entry> registeredEntriesBlock = new HashMap<>();
+	private final Map<Tag<Block>, Entry> registeredEntriesTag = new HashMap<>();
+	private final Map<Block, Entry> computedEntries = new HashMap<>();
 	private final Identifier id;
 	private final Block key;
 	private boolean tagsPresent = false;
@@ -63,7 +63,7 @@ public class FlammableBlockRegistryImpl implements FlammableBlockRegistry, Simpl
 
 		// tags take precedence before blocks
 		for (Tag<Block> tag : registeredEntriesTag.keySet()) {
-			FlammableBlockRegistry.Entry entry = registeredEntriesTag.get(tag);
+			Entry entry = registeredEntriesTag.get(tag);
 
 			for (Block block : tag.values()) {
 				computedEntries.put(block, entry);

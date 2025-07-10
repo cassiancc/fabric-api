@@ -16,6 +16,8 @@
 
 package net.fabricmc.fabric.mixin.entity.event;
 
+import net.minecraft.world.dimension.DimensionType;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -33,8 +35,8 @@ abstract class EntityMixin {
 	@Shadow
 	public World world;
 
-	@Inject(method = "moveToWorld", at = @At("RETURN"))
-	private void afterWorldChanged(ServerWorld destination, CallbackInfoReturnable<Entity> cir) {
+	@Inject(method = "changeDimension", at = @At("RETURN"))
+	private void afterWorldChanged(DimensionType newDimension, CallbackInfoReturnable<Entity> cir) {
 		// Ret will only have an entity if the teleport worked (entity not removed, teleportTarget was valid, entity was successfully created)
 		Entity ret = cir.getReturnValue();
 

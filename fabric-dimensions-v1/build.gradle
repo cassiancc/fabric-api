@@ -8,5 +8,7 @@ dependencies {
 }
 
 moduleDependencies(project, [
-		'fabric-api-base'
+		'fabric-api-base',
+		'fabric-registry-sync-v0',
+		'fabric-networking-v0'
 ])

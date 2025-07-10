@@ -17,19 +17,15 @@
 package net.fabricmc.fabric.impl.resource.loader;
 
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
 import com.google.common.base.Charsets;
 import org.apache.commons.io.IOUtils;
-import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.SharedConstants;
+import net.minecraft.resource.ResourcePack;
 import net.minecraft.resource.ResourceType;
 
-import net.fabricmc.fabric.api.resource.ModResourcePack;
-import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
@@ -38,40 +34,21 @@ import net.fabricmc.loader.api.metadata.ModMetadata;
  * Internal utilities for managing resource packs.
  */
 public final class ModResourcePackUtil {
-	public static final int PACK_FORMAT_VERSION = SharedConstants.getGameVersion().getPackVersion();
+	public static final int PACK_FORMAT_VERSION = 4;
 
-	private ModResourcePackUtil() {
-	}
+	private ModResourcePackUtil() { }
 
-	/**
-	 * Appends mod resource packs to the given list.
-	 *
-	 * @param packs   the resource pack list to append
-	 * @param type    the type of resource
-	 * @param subPath the resource pack sub path directory in mods, may be {@code null}
-	 */
-	public static void appendModResourcePacks(List<ModResourcePack> packs, ResourceType type, @Nullable String subPath) {
+	public static void appendModResourcePacks(List<ResourcePack> packList, ResourceType type) {
 		for (ModContainer container : FabricLoader.getInstance().getAllMods()) {
 			if (container.getMetadata().getType().equals("builtin")) {
 				continue;
 			}
 
 			Path path = container.getRootPath();
-
-			if (subPath != null) {
-				Path childPath = path.resolve(subPath.replace("/", path.getFileSystem().getSeparator())).toAbsolutePath().normalize();
-
-				if (!childPath.startsWith(path) || !Files.exists(childPath)) {
-					continue;
-				}
-
-				path = childPath;
-			}
-
-			ModResourcePack pack = new ModNioResourcePack(container.getMetadata(), path, null, ResourcePackActivationType.ALWAYS_ENABLED);
+			ResourcePack pack = new ModNioResourcePack(container.getMetadata(), path, null);
 
 			if (!pack.getNamespaces(type).isEmpty()) {
-				packs.add(pack);
+				packList.add(pack);
 			}
 		}
 	}

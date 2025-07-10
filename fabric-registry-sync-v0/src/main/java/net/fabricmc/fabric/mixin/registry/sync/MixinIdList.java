@@ -22,22 +22,24 @@ import java.util.List;
 
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntMaps;
+
+import net.minecraft.util.collection.IdList;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
-import net.minecraft.util.collection.IdList;
 
 import net.fabricmc.fabric.impl.registry.sync.RemovableIdList;
 
 @Mixin(IdList.class)
-public class MixinIdList<T> implements RemovableIdList<T> {
+public class MixinIdList implements RemovableIdList<Object> {
 	@Shadow
 	private int nextId;
 	@Shadow
-	private IdentityHashMap<T, Integer> idMap;
+	private IdentityHashMap<Object, Integer> idMap;
 	@Shadow
-	private List<T> list;
+	private List<Object> list;
 
 	@Override
 	public void fabric_clear() {
@@ -47,7 +49,7 @@ public class MixinIdList<T> implements RemovableIdList<T> {
 	}
 
 	@Unique
-	private void fabric_removeInner(T o) {
+	private void fabric_removeInner(Object o) {
 		int value = idMap.remove(o);
 		list.set(value, null);
 
@@ -57,7 +59,7 @@ public class MixinIdList<T> implements RemovableIdList<T> {
 	}
 
 	@Override
-	public void fabric_remove(T o) {
+	public void fabric_remove(Object o) {
 		if (idMap.containsKey(o)) {
 			fabric_removeInner(o);
 		}
@@ -65,9 +67,9 @@ public class MixinIdList<T> implements RemovableIdList<T> {
 
 	@Override
 	public void fabric_removeId(int i) {
-		List<T> removals = new ArrayList<>();
+		List<Object> removals = new ArrayList<>();
 
-		for (T o : idMap.keySet()) {
+		for (Object o : idMap.keySet()) {
 			int j = idMap.get(o);
 
 			if (i == j) {
@@ -86,15 +88,15 @@ public class MixinIdList<T> implements RemovableIdList<T> {
 	@Override
 	public void fabric_remapIds(Int2IntMap map) {
 		// remap idMap
-		idMap.replaceAll((a, b) -> map.get((int) b));
+		idMap.replaceAll((a, b) -> map.get(b));
 
 		// remap list
 		nextId = 0;
-		List<T> oldList = new ArrayList<>(list);
+		List<Object> oldList = new ArrayList<>(list);
 		list.clear();
 
 		for (int k = 0; k < oldList.size(); k++) {
-			T o = oldList.get(k);
+			Object o = oldList.get(k);
 
 			if (o != null) {
 				int i = map.getOrDefault(k, k);

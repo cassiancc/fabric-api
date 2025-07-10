@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Supplier;
 
+import net.minecraft.client.render.model.json.ModelItemPropertyOverrideList;
+
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
@@ -28,7 +30,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.json.ModelOverrideList;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.item.ItemStack;
@@ -88,8 +89,8 @@ final class FrameBakedModel implements BakedModel, FabricBakedModel {
 	}
 
 	@Override
-	public ModelOverrideList getOverrides() {
-		return ModelOverrideList.EMPTY;
+	public ModelItemPropertyOverrideList getItemPropertyOverrides() {
+		return ModelItemPropertyOverrideList.EMPTY;
 	}
 
 	@Override

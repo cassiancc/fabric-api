@@ -43,7 +43,7 @@ public abstract class CommandManagerMixin {
 	 * @reason Add commands before ambiguities are calculated.
 	 */
 	@Inject(at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/CommandDispatcher;findAmbiguities(Lcom/mojang/brigadier/AmbiguityConsumer;)V"), method = "<init>")
-	private void fabric_addCommands(CommandManager.RegistrationEnvironment environment, CallbackInfo ci) {
-		CommandRegistrationCallback.EVENT.invoker().register(this.dispatcher, environment == CommandManager.RegistrationEnvironment.DEDICATED);
+	private void fabric_addCommands(boolean isDedicatedServer, CallbackInfo ci) {
+		CommandRegistrationCallback.EVENT.invoker().register(this.dispatcher, isDedicatedServer);
 	}
 }

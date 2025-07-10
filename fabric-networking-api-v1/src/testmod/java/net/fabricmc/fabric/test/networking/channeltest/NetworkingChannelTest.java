@@ -16,10 +16,10 @@
 
 package net.fabricmc.fabric.test.networking.channeltest;
 
-import static net.minecraft.command.argument.EntityArgumentType.getPlayer;
-import static net.minecraft.command.argument.EntityArgumentType.player;
-import static net.minecraft.command.argument.IdentifierArgumentType.getIdentifier;
-import static net.minecraft.command.argument.IdentifierArgumentType.identifier;
+import static net.minecraft.command.arguments.EntityArgumentType.getPlayer;
+import static net.minecraft.command.arguments.EntityArgumentType.player;
+import static net.minecraft.command.arguments.IdentifierArgumentType.getIdentifier;
+import static net.minecraft.command.arguments.IdentifierArgumentType.identifier;
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
@@ -33,8 +33,8 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 
-import net.minecraft.command.CommandSource;
 import net.minecraft.command.EntitySelector;
+import net.minecraft.server.command.CommandSource;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;

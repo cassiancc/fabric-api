@@ -6,9 +6,6 @@
     "MixinAbstractFurnaceBlockEntity",
     "MixinFireBlock"
   ],
-  "client": [
-    "client.MixinClientPlayNetworkHandler"
-  ],
   "injectors": {
     "defaultRequire": 1
   }

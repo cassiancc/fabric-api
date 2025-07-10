@@ -16,19 +16,44 @@
 
 package net.fabricmc.fabric.impl.loot.table;
 
-import net.minecraft.loot.entry.LootPoolEntry;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonSerializer;
+import java.lang.reflect.Method;
 
-import net.fabricmc.fabric.mixin.loot.table.LootPoolEntryTypesAccessor;
+import net.minecraft.loot.entry.LootEntries;
+import net.minecraft.loot.entry.LootEntry;
 
 public final class LootEntryTypeRegistryImpl implements net.fabricmc.fabric.api.loot.v1.LootEntryTypeRegistry {
 	public static final LootEntryTypeRegistryImpl INSTANCE = new LootEntryTypeRegistryImpl();
+	private static final Method REGISTER_METHOD;
+
+	static {
+		Method target = null;
+
+		for (Method m : LootEntries.class.getDeclaredMethods()) {
+			if (m.getParameterCount() == 1 && m.getParameterTypes()[0] == LootEntry.Serializer.class) {
+				if (target != null) {
+					throw new RuntimeException("More than one register-like method found in LootEntries!");
+				} else {
+					target = m;
+				}
+			}
+		}
+
+		if (target == null) {
+			throw new RuntimeException("Could not find register-like method in LootEntries!");
+		} else {
+			REGISTER_METHOD = target;
+			REGISTER_METHOD.setAccessible(true);
+		}
+	}
 
 	private LootEntryTypeRegistryImpl() { }
 
 	@Override
-	public void register(Identifier id, JsonSerializer<? extends LootPoolEntry> serializer) {
-		LootPoolEntryTypesAccessor.register(id.toString(), serializer);
+	public void register(LootEntry.Serializer<?> serializer) {
+		try {
+			REGISTER_METHOD.invoke(null, serializer);
+		} catch (Throwable t) {
+			throw new RuntimeException(t);
+		}
 	}
 }

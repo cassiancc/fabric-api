@@ -16,23 +16,20 @@
 
 package net.fabricmc.fabric.impl.tag.extension;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.function.Supplier;
 
-import net.minecraft.tag.TagGroup;
 import net.minecraft.tag.Tag;
+import net.minecraft.tag.TagContainer;
 import net.minecraft.util.Identifier;
 
-import net.fabricmc.fabric.api.tag.FabricTag;
-
-public final class TagDelegate<T> implements Tag.Identified<T>, FabricTag<T>, FabricTagHooks {
-	private final Identifier id;
-	private final Supplier<TagGroup<T>> containerSupplier;
+public final class TagDelegate<T> extends Tag<T> {
+	private final Supplier<TagContainer<T>> containerSupplier;
 	private volatile Target<T> target;
-	private int clearCount;
 
-	public TagDelegate(Identifier id, Supplier<TagGroup<T>> containerSupplier) {
-		this.id = id;
+	public TagDelegate(Identifier id, Supplier<TagContainer<T>> containerSupplier) {
+		super(id);
+
 		this.containerSupplier = containerSupplier;
 	}
 
@@ -42,8 +39,13 @@ public final class TagDelegate<T> implements Tag.Identified<T>, FabricTag<T>, Fa
 	}
 
 	@Override
-	public List<T> values() {
+	public Collection<T> values() {
 		return getTag().values();
+	}
+
+	@Override
+	public Collection<Entry<T>> entries() {
+		return getTag().entries();
 	}
 
 	/**
@@ -57,11 +59,11 @@ public final class TagDelegate<T> implements Tag.Identified<T>, FabricTag<T>, Fa
 	 */
 	private Tag<T> getTag() {
 		Target<T> target = this.target;
-		TagGroup<T> reqContainer = containerSupplier.get();
+		TagContainer<T> reqContainer = containerSupplier.get();
 		Tag<T> ret;
 
 		if (target == null || target.container != reqContainer) {
-			ret = reqContainer.getTagOrEmpty(getId());
+			ret = reqContainer.getOrCreate(getId());
 			this.target = new Target<>(reqContainer, ret);
 		} else {
 			ret = target.tag;
@@ -70,28 +72,13 @@ public final class TagDelegate<T> implements Tag.Identified<T>, FabricTag<T>, Fa
 		return ret;
 	}
 
-	@Override
-	public Identifier getId() {
-		return id;
-	}
-
-	@Override
-	public boolean hasBeenReplaced() {
-		return clearCount > 0;
-	}
-
-	@Override
-	public void fabric_setExtraData(int clearCount) {
-		this.clearCount = clearCount;
-	}
-
 	private static final class Target<T> {
-		Target(TagGroup<T> container, Tag<T> tag) {
+		Target(TagContainer<T> container, Tag<T> tag) {
 			this.container = container;
 			this.tag = tag;
 		}
 
-		final TagGroup<T> container;
+		final TagContainer<T> container;
 		final Tag<T> tag;
 	}
 }

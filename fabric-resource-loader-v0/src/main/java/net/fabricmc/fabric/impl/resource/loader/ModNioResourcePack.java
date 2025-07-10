@@ -40,7 +40,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 
 import net.fabricmc.fabric.api.resource.ModResourcePack;
-import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 
 public class ModNioResourcePack extends AbstractFileResourcePack implements ModResourcePack {
@@ -51,16 +50,14 @@ public class ModNioResourcePack extends AbstractFileResourcePack implements ModR
 	private final boolean cacheable;
 	private final AutoCloseable closer;
 	private final String separator;
-	private final ResourcePackActivationType activationType;
 
-	public ModNioResourcePack(ModMetadata modInfo, Path path, AutoCloseable closer, ResourcePackActivationType activationType) {
+	public ModNioResourcePack(ModMetadata modInfo, Path path, AutoCloseable closer) {
 		super(null);
 		this.modInfo = modInfo;
 		this.basePath = path.toAbsolutePath().normalize();
 		this.cacheable = false; /* TODO */
 		this.closer = closer;
 		this.separator = basePath.getFileSystem().getSeparator();
-		this.activationType = activationType;
 	}
 
 	private Path getPath(String filename) {
@@ -77,10 +74,26 @@ public class ModNioResourcePack extends AbstractFileResourcePack implements ModR
 	protected InputStream openFile(String filename) throws IOException {
 		InputStream stream;
 
-		Path path = getPath(filename);
+		if (DeferredNioExecutionHandler.shouldDefer()) {
+			stream = DeferredNioExecutionHandler.submit(() -> {
+				Path path = getPath(filename);
 
-		if (path != null && Files.isRegularFile(path)) {
-			return Files.newInputStream(path);
+				if (path != null && Files.isRegularFile(path)) {
+					return new DeferredInputStream(Files.newInputStream(path));
+				} else {
+					return null;
+				}
+			});
+
+			if (stream != null) {
+				return stream;
+			}
+		} else {
+			Path path = getPath(filename);
+
+			if (path != null && Files.isRegularFile(path)) {
+				return Files.newInputStream(path);
+			}
 		}
 
 		stream = ModResourcePackUtil.openDefault(modInfo, filename);
@@ -99,8 +112,19 @@ public class ModNioResourcePack extends AbstractFileResourcePack implements ModR
 			return true;
 		}
 
-		Path path = getPath(filename);
-		return path != null && Files.isRegularFile(path);
+		if (DeferredNioExecutionHandler.shouldDefer()) {
+			try {
+				return DeferredNioExecutionHandler.submit(() -> {
+					Path path = getPath(filename);
+					return path != null && Files.isRegularFile(path);
+				});
+			} catch (IOException e) {
+				return false;
+			}
+		} else {
+			Path path = getPath(filename);
+			return path != null && Files.isRegularFile(path);
+		}
 	}
 
 	@Override
@@ -186,12 +210,14 @@ public class ModNioResourcePack extends AbstractFileResourcePack implements ModR
 	}
 
 	@Override
-	public void close() {
+	public void close() throws IOException {
 		if (closer != null) {
 			try {
 				closer.close();
+			} catch (IOException e) {
+				throw e;
 			} catch (Exception e) {
-				throw new RuntimeException(e);
+				throw new IOException(e);
 			}
 		}
 	}
@@ -199,10 +225,6 @@ public class ModNioResourcePack extends AbstractFileResourcePack implements ModR
 	@Override
 	public ModMetadata getFabricModMetadata() {
 		return modInfo;
-	}
-
-	public ResourcePackActivationType getActivationType() {
-		return this.activationType;
 	}
 
 	@Override

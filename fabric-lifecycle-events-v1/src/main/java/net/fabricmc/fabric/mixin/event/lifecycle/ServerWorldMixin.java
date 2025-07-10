@@ -34,19 +34,18 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 @Mixin(ServerWorld.class)
 public abstract class ServerWorldMixin {
 	@Shadow
-	private boolean inEntityTick;
+	private boolean ticking;
 
 	// Call our load event after vanilla has loaded the entity
 	@Inject(method = "loadEntityUnchecked", at = @At("TAIL"))
 	private void onLoadEntity(Entity entity, CallbackInfo ci) {
-		if (!this.inEntityTick) { // Copy vanilla logic, we cannot load entities while the game is ticking entities
+		if (!this.ticking) { // Copy vanilla logic, we cannot load entities while the game is ticking entities
 			ServerEntityEvents.ENTITY_LOAD.invoker().onLoad(entity, (ServerWorld) (Object) this);
 		}
 	}
 
 	// Make sure "insideBlockTick" is true before we call the start tick, so inject after it is set
-	@Inject(method = "tick", at = @At(value = "FIELD", target = "Lnet/minecraft/server/world/ServerWorld;inBlockTick:Z", opcode = Opcodes.PUTFIELD, ordinal = 0, shift = At.Shift.AFTER))
-	private void startWorldTick(BooleanSupplier shouldKeepTicking, CallbackInfo ci) {
+	@Inject(method = "tick", at = @At(value = "FIELD", target = "Lnet/minecraft/server/world/ServerWorld;insideTick:Z", opcode = Opcodes.PUTFIELD, ordinal = 0, shift = At.Shift.AFTER))	private void startWorldTick(BooleanSupplier shouldKeepTicking, CallbackInfo ci) {
 		ServerTickEvents.START_WORLD_TICK.invoker().onStartTick((ServerWorld) (Object) this);
 	}
 }

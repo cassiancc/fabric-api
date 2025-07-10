@@ -3,8 +3,15 @@
   "package": "net.fabricmc.fabric.mixin.dimension",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "EntityMixin",
-    "ServerBugfixMixin"
+    "EntityHooks",
+    "MixinEntity",
+    "MixinPortalForcer",
+    "MixinWorld",
+    "idremap.MixinDimensionRawIndexFix",
+    "idremap.MixinLevelProperties",
+    "idremap.MixinLevelStorage",
+    "idremap.MixinPlayerManager",
+    "idremap.MixinUnmodifiableLevelProperties"
   ],
   "injectors": {
     "defaultRequire": 1

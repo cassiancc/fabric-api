@@ -25,16 +25,17 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.BuiltinRegistries;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.BlockRenderView;
-import net.minecraft.world.biome.BiomeKeys;
 
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 
+import net.minecraft.world.biome.Biomes;
+
 public class FluidRenderHandlerRegistryImpl implements FluidRenderHandlerRegistry {
 	public static final FluidRenderHandlerRegistryImpl INSTANCE = new FluidRenderHandlerRegistryImpl();
-	private static final int DEFAULT_WATER_COLOR = BuiltinRegistries.BIOME.get(BiomeKeys.OCEAN).getWaterColor();
+	private static final int DEFAULT_WATER_COLOR = Biomes.OCEAN.getWaterColor();
 	private final Map<Fluid, FluidRenderHandler> handlers = new IdentityHashMap<>();
 	private final Map<Fluid, FluidRenderHandler> modHandlers = new IdentityHashMap<>();
 

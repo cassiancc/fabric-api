@@ -27,6 +27,11 @@ public interface RegistryEntryAddedCallback<T> {
 	void onEntryAdded(int rawId, Identifier id, T object);
 
 	static <T> Event<RegistryEntryAddedCallback<T>> event(Registry<T> registry) {
-		return ListenableRegistry.get(registry).fabric_getAddObjectEvent();
+		if (!(registry instanceof ListenableRegistry)) {
+			throw new IllegalArgumentException("Unsupported registry: " + registry.getClass().getName());
+		}
+
+		//noinspection unchecked
+		return (Event<RegistryEntryAddedCallback<T>>) ((ListenableRegistry) registry).fabric_getAddObjectEvent();
 	}
 }

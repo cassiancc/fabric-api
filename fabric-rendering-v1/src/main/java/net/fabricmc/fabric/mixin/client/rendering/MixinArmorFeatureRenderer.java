@@ -68,7 +68,7 @@ public abstract class MixinArmorFeatureRenderer extends FeatureRenderer {
 	}
 
 	@Inject(method = "renderArmor", at = @At("HEAD"))
-	private void storeSlot(MatrixStack matrices, VertexConsumerProvider vertexConsumers, LivingEntity livingEntity, EquipmentSlot slot, int i, BipedEntityModel bipedEntityModel, CallbackInfo ci) {
+	private void storeSlot(MatrixStack matrices, VertexConsumerProvider vertexConsumers, LivingEntity entity, float limbAngle, float limbDistance, float tickDelta, float customAngle, float headYaw, float headPitch, EquipmentSlot slot, int light, BipedEntityModel<?> armorModel, CallbackInfo ci) {
 		// We store the current armor slot that is rendering before we render each armor piece
 		this.storedSlot = slot;
 	}
@@ -93,7 +93,7 @@ public abstract class MixinArmorFeatureRenderer extends FeatureRenderer {
 	}
 
 	@Inject(method = "getArmorTexture", at = @At(value = "INVOKE", target = "Ljava/util/Map;computeIfAbsent(Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;"), cancellable = true, locals = LocalCapture.CAPTURE_FAILHARD)
-	private void getArmorTexture(ArmorItem armorItem, boolean secondLayer, /* @Nullable */ String suffix, CallbackInfoReturnable<Identifier> cir, String vanillaIdentifier) {
+	private void getArmorTexture(EquipmentSlot slot, ArmorItem armorItem, boolean secondLayer, /* @Nullable */ String suffix, CallbackInfoReturnable<Identifier> cir, String vanillaIdentifier) {
 		String texture = ArmorRenderingRegistry.getArmorTexture(storedEntity, storedEntity.getEquippedStack(storedSlot), storedSlot, secondLayer, suffix, new Identifier(vanillaIdentifier)).toString();
 
 		if (!Objects.equals(texture, vanillaIdentifier)) {

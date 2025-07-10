@@ -4,8 +4,8 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "BambooBlockMixin",
-    "LivingEntityMixin",
-    "MixinItemStack"
+    "MixinItemStack",
+    "MixinLivingEntity"
   ],
   "injectors": {
     "defaultRequire": 1

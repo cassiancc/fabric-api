@@ -16,7 +16,6 @@
 
 package net.fabricmc.fabric.api.particle.v1;
 
-import com.mojang.serialization.Codec;
 
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.particle.ParticleEffect;
@@ -39,7 +38,7 @@ import net.minecraft.particle.ParticleType;
  * </pre>
  * </blockquote>
  *
- * @see ParticleModClient in the fabric example mods for a more complete usage.
+// * @see ParticleModClient in the fabric example mods for a more complete usage.
  */
 public final class FabricParticleTypes {
 	private FabricParticleTypes() { }
@@ -76,12 +75,10 @@ public final class FabricParticleTypes {
 	 * @param factory	 A factory for serializing packet data and string command parameters into a particle effect.
 	 */
 	public static <T extends ParticleEffect> ParticleType<T> complex(boolean alwaysSpawn, ParticleEffect.Factory<T> factory) {
-		return new ParticleType<T>(alwaysSpawn, factory) {
-			@Override
-			public Codec<T> getCodec() {
-				//TODO fix me
-				return null;
-			}
+		return new ParticleType<T>(alwaysSpawn, factory, (random, tParticleType) -> {
+			return null;
+			// FIXME
+		}) {
 		};
 	}
 }

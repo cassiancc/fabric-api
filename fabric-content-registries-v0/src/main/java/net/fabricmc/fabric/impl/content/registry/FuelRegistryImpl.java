@@ -16,7 +16,6 @@
 
 package net.fabricmc.fabric.impl.content.registry;
 
-import java.util.IdentityHashMap;
 import java.util.Map;
 
 import it.unimi.dsi.fastutil.objects.Object2IntLinkedOpenHashMap;
@@ -29,38 +28,20 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.tag.Tag;
 
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 
 // TODO: Clamp values to 32767 (+ add hook for mods which extend the limit to disable the check?)
-public final class FuelRegistryImpl implements FuelRegistry {
+public class FuelRegistryImpl implements FuelRegistry {
 	public static final FuelRegistryImpl INSTANCE = new FuelRegistryImpl();
 	private static final Logger LOGGER = LogManager.getLogger();
 	private final Object2IntMap<ItemConvertible> itemCookTimes = new Object2IntLinkedOpenHashMap<>();
 	private final Object2IntMap<Tag<Item>> tagCookTimes = new Object2IntLinkedOpenHashMap<>();
-	private volatile Map<Item, Integer> fuelTimeCache = null; // thread safe via copy-on-write mechanism
 
-	public FuelRegistryImpl() {
-		ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, serverResourceManager, success) -> {
-			if (success) {
-				resetCache();
-			}
-		});
-	}
-
-	public Map<Item, Integer> getFuelTimes() {
-		Map<Item, Integer> ret = fuelTimeCache;
-
-		if (ret == null) {
-			fuelTimeCache = ret = new IdentityHashMap<>(AbstractFurnaceBlockEntity.createFuelTimeMap()); // IdentityHashMap is faster than vanilla's LinkedHashMap and suitable for Item keys
-		}
-
-		return ret;
-	}
+	public FuelRegistryImpl() { }
 
 	@Override
 	public Integer get(ItemConvertible item) {
-		return getFuelTimes().get(item.asItem());
+		return AbstractFurnaceBlockEntity.createFuelTimeMap().get(item.asItem());
 	}
 
 	@Override
@@ -70,41 +51,35 @@ public final class FuelRegistryImpl implements FuelRegistry {
 		}
 
 		itemCookTimes.put(item, cookTime.intValue());
-		resetCache();
 	}
 
 	@Override
 	public void add(Tag<Item> tag, Integer cookTime) {
 		if (cookTime > 32767) {
-			LOGGER.warn("Tried to register an overly high cookTime: " + cookTime + " > 32767! (" + getTagName(tag) + ")");
+			LOGGER.warn("Tried to register an overly high cookTime: " + cookTime + " > 32767! (" + tag.getId() + ")");
 		}
 
 		tagCookTimes.put(tag, cookTime.intValue());
-		resetCache();
 	}
 
 	@Override
 	public void remove(ItemConvertible item) {
 		add(item, 0);
-		resetCache();
 	}
 
 	@Override
 	public void remove(Tag<Item> tag) {
 		add(tag, 0);
-		resetCache();
 	}
 
 	@Override
 	public void clear(ItemConvertible item) {
 		itemCookTimes.removeInt(item);
-		resetCache();
 	}
 
 	@Override
 	public void clear(Tag<Item> tag) {
 		tagCookTimes.removeInt(tag);
-		resetCache();
 	}
 
 	public void apply(Map<Item, Integer> map) {
@@ -117,7 +92,9 @@ public final class FuelRegistryImpl implements FuelRegistry {
 					map.remove(i);
 				}
 			} else {
-				AbstractFurnaceBlockEntity.addFuel(map, tag, time);
+				for (Item i : tag.values()) {
+					map.put(i, time);
+				}
 			}
 		}
 
@@ -127,20 +104,8 @@ public final class FuelRegistryImpl implements FuelRegistry {
 			if (time <= 0) {
 				map.remove(item.asItem());
 			} else {
-				AbstractFurnaceBlockEntity.addFuel(map, item, time);
+				map.put(item.asItem(), time);
 			}
 		}
-	}
-
-	private static String getTagName(Tag<?> tag) {
-		if (tag instanceof Tag.Identified) {
-			return ((Tag.Identified<?>) tag).getId().toString();
-		}
-
-		return tag.toString();
-	}
-
-	public void resetCache() {
-		fuelTimeCache = null;
 	}
 }

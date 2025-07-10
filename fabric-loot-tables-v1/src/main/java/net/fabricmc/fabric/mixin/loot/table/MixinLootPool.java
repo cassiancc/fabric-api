@@ -27,7 +27,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTableRange;
 import net.minecraft.loot.condition.LootCondition;
-import net.minecraft.loot.entry.LootPoolEntry;
+import net.minecraft.loot.entry.LootEntry;
 import net.minecraft.loot.function.LootFunction;
 
 import net.fabricmc.fabric.api.loot.v1.FabricLootPool;
@@ -36,7 +36,7 @@ import net.fabricmc.fabric.api.loot.v1.FabricLootPool;
 public abstract class MixinLootPool implements FabricLootPool {
 	@Shadow
 	@Final
-	private LootPoolEntry[] entries;
+	private LootEntry[] entries;
 
 	@Shadow
 	@Final
@@ -47,7 +47,7 @@ public abstract class MixinLootPool implements FabricLootPool {
 	private LootFunction[] functions;
 
 	@Override
-	public List<LootPoolEntry> getEntries() {
+	public List<LootEntry> getEntries() {
 		return Arrays.asList(entries);
 	}
 
@@ -63,5 +63,5 @@ public abstract class MixinLootPool implements FabricLootPool {
 
 	@Accessor
 	@Override
-	public abstract LootTableRange getRolls();
+	public abstract LootTableRange getRollsRange();
 }

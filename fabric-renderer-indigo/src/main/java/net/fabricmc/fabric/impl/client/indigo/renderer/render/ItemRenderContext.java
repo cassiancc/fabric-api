@@ -106,7 +106,7 @@ public class ItemRenderContext extends AbstractRenderContext implements RenderCo
 		this.transformMode = transformMode;
 		this.vanillaHandler = vanillaHandler;
 		quadBlendMode = BlendMode.DEFAULT;
-		modelVertexConsumer = selectVertexConsumer(RenderLayers.getItemLayer(itemStack, transformMode != ModelTransformation.Mode.GROUND));
+		modelVertexConsumer = selectVertexConsumer(RenderLayers.getItemLayer(itemStack));
 
 		matrixStack.push();
 		((BakedModel) model).getTransformation().getTransformation(transformMode).apply(invert, matrixStack);
@@ -132,7 +132,7 @@ public class ItemRenderContext extends AbstractRenderContext implements RenderCo
 	 */
 	private VertexConsumer selectVertexConsumer(RenderLayer layerIn) {
 		final RenderLayer layer = transformMode == ModelTransformation.Mode.GUI ? TexturedRenderLayers.getEntityTranslucentCull() : layerIn;
-		return ItemRenderer.getArmorGlintConsumer(vertexConsumerProvider, layer, true, itemStack.hasGlint());
+		return ItemRenderer.getArmorVertexConsumer(vertexConsumerProvider, layer, true, itemStack.hasEnchantmentGlint());
 	}
 
 	private class Maker extends MutableQuadViewImpl implements QuadEmitter {

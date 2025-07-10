@@ -105,7 +105,7 @@ public final class ClientCommandInternals {
 			return true;
 		} catch (RuntimeException e) {
 			LOGGER.warn("Error while executing client-sided command '{}'", message, e);
-			commandSource.sendError(Text.of(e.getMessage()));
+			commandSource.sendError(new LiteralText(e.getMessage()));
 			return true;
 		} finally {
 			client.getProfiler().pop();

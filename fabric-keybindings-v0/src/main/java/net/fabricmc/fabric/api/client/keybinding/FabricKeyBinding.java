@@ -42,7 +42,7 @@ public class FabricKeyBinding extends KeyBinding {
 	 * @return configured KeyCode
 	 */
 	@Deprecated
-	public InputUtil.Key getBoundKey() {
+	public InputUtil.KeyCode getBoundKey() {
 		return KeyBindingHelper.getBoundKeyOf(this);
 	}
 
