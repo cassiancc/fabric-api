@@ -45,11 +45,11 @@ public class FabricCreativeGuiComponents {
 		return (int) Math.ceil((CreativeModeTabs.tabs().size() - COMMON_TABS.stream().filter(CreativeModeTab::shouldDisplay).count()) / TABS_PER_PAGE);
 	}
 
-	public static class CreativeModeTabButtonWidget extends Button {
+	public static class CreativeModeTabButton extends Button {
 		final CreativeModeInventoryScreen screen;
 		final Type type;
 
-		public CreativeModeTabButtonWidget(int x, int y, Type type, CreativeModeInventoryScreen screen) {
+		public CreativeModeTabButton(int x, int y, Type type, CreativeModeInventoryScreen screen) {
 			super(x, y, 10, 12, type.text, (bw) -> type.clickConsumer.accept(screen), Button.DEFAULT_NARRATION);
 			this.type = type;
 			this.screen = screen;

@@ -78,8 +78,8 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
 		int ypos = topPos + 4;
 
 		CreativeModeInventoryScreen self = (CreativeModeInventoryScreen) (Object) this;
-		addRenderableWidget(new FabricCreativeGuiComponents.CreativeModeTabButtonWidget(xpos + 10, ypos, FabricCreativeGuiComponents.Type.NEXT, self));
-		addRenderableWidget(new FabricCreativeGuiComponents.CreativeModeTabButtonWidget(xpos, ypos, FabricCreativeGuiComponents.Type.PREVIOUS, self));
+		addRenderableWidget(new FabricCreativeGuiComponents.CreativeModeTabButton(xpos + 10, ypos, FabricCreativeGuiComponents.Type.NEXT, self));
+		addRenderableWidget(new FabricCreativeGuiComponents.CreativeModeTabButton(xpos, ypos, FabricCreativeGuiComponents.Type.PREVIOUS, self));
 	}
 
 	@Inject(method = "selectTab", at = @At("HEAD"), cancellable = true)
