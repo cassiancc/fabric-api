@@ -18,9 +18,6 @@ package net.fabricmc.fabric.test.creativemodetab;
 
 import com.google.common.base.Supplier;
 
-import net.fabricmc.fabric.api.creativemodetab.v1.CreativeModeTabEvents;
-import net.fabricmc.fabric.api.creativemodetab.v1.FabricCreativeModeTab;
-
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -35,6 +32,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.creativemodetab.v1.CreativeModeTabEvents;
+import net.fabricmc.fabric.api.creativemodetab.v1.FabricCreativeModeTab;
 
 public class CreativeModeTabTest implements ModInitializer {
 	private static final String MOD_ID = "fabric-creative-mode-tab-v1-testmod";

@@ -21,10 +21,6 @@ import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Set;
 
-import net.fabricmc.fabric.api.creativemodetab.v1.CreativeModeTabEvents;
-
-import net.fabricmc.fabric.api.creativemodetab.v1.FabricCreativeModeTabOutput;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -38,9 +34,11 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 
+import net.fabricmc.fabric.api.creativemodetab.v1.CreativeModeTabEvents;
+import net.fabricmc.fabric.api.creativemodetab.v1.FabricCreativeModeTabOutput;
 import net.fabricmc.fabric.api.event.Event;
-import net.fabricmc.fabric.impl.creativemodetab.FabricCreativeModeTabImpl;
 import net.fabricmc.fabric.impl.creativemodetab.CreativeModeTabEventsImpl;
+import net.fabricmc.fabric.impl.creativemodetab.FabricCreativeModeTabImpl;
 
 @Mixin(CreativeModeTab.class)
 abstract class CreativeModeTabMixin implements FabricCreativeModeTabImpl {

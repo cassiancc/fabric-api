@@ -19,13 +19,12 @@ package net.fabricmc.fabric.impl.creativemodetab;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.fabricmc.fabric.api.creativemodetab.v1.CreativeModeTabEvents;
-
 import org.jspecify.annotations.Nullable;
 
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 
+import net.fabricmc.fabric.api.creativemodetab.v1.CreativeModeTabEvents;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 
