@@ -60,7 +60,10 @@ public record AttachmentChange(AttachmentTargetInfo<?> targetInfo, AttachmentTyp
 			AttachmentChange::new
 	);
 	private static final int MAX_PADDING_SIZE_IN_BYTES = AttachmentTargetInfo.MAX_SIZE_IN_BYTES + AttachmentSync.MAX_IDENTIFIER_SIZE;
-	private static final int MAX_DATA_SIZE_IN_BYTES = CustomPayloadC2SPacketAccessor.getMaxPayloadSize() - MAX_PADDING_SIZE_IN_BYTES;
+	private static final int MAX_DATA_SIZE_IN_BYTES = ServerboundCustomPayloadPacketAccessor.getMaxPayloadSize() - MAX_PADDING_SIZE_IN_BYTES;
+	private static final boolean DISCONNECT_ON_UNKNOWN_TARGETS = System.getProperty("fabric.attachment.disconnect_on_unknown_targets") != null;
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(AttachmentChange.class);
 
 	@SuppressWarnings("unchecked")
 	public static AttachmentChange create(AttachmentTargetInfo<?> targetInfo, AttachmentType<?> type, @Nullable Object value, DynamicRegistryManager dynamicRegistryManager) {
@@ -162,7 +165,12 @@ public record AttachmentChange(AttachmentTargetInfo<?> targetInfo, AttachmentTyp
 					.append(ScreenTexts.LINE_BREAK);
 			targetInfo.appendDebugInformation(errorMessageText);
 
-			throw new AttachmentSyncException(errorMessageText);
+			if (DISCONNECT_ON_UNKNOWN_TARGETS) {
+				throw new AttachmentSyncException(errorMessageText);
+			}
+
+			LOGGER.warn(errorMessageText.getString().trim());
+			return;
 		}
 
 		target.setAttached((AttachmentType<Object>) type, value);
