@@ -203,7 +203,7 @@ abstract class AttachmentTargetsMixin implements AttachmentTargetImpl {
 			return;
 		}
 
-		syncedAttachments.replaceAll((_, attachmentChange) -> {
+		syncedAttachments.replaceAll((c, attachmentChange) -> {
 			if (attachmentChange.targetInfo().equals(oldTargetInfo)) {
 				return attachmentChange.withNewTarget(newTargetInfo);
 			}
